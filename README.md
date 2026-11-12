@@ -4,7 +4,8 @@ Painel interativo (Python + Streamlit) para a comunidade de **Heliópolis** e a 
 **calor, umidade e qualidade do ar**, com mapas da comunidade e explicações em linguagem simples em todas as telas.
 
 > **Baixe e use sem instalar nada:** veja [Como usar sem Python](#4-como-usar-sem-python-executável-windows).
-> Link da Release com o executável: **`<COLE AQUI O LINK DA RELEASE>`** *(ex.: `https://github.com/USUARIO/REPOSITORIO/releases/latest` — preencher após publicar; veja `docs/GITHUB_E_RELEASE.md`)*
+> Link da Release com o executável: **`https://github.com/Bruno-FM89/ProjetoPAE/releases/latest`**
+> — preencher após publicar; veja `docs/GITHUB_E_RELEASE.md`)*
 
 ## 1. Contexto e propósito
 
