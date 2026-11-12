@@ -1,0 +1,114 @@
+{
+  "titulo": "Recorte do MonitorAr: estações da CETESB próximas a Heliópolis",
+  "fonte": "Sistema Nacional de Gestão da Qualidade do Ar - MonitorAr (Ministério do Meio Ambiente e Mudança do Clima)",
+  "orgao_responsavel_pelas_medicoes": "Companhia Ambiental do Estado de São Paulo - CETESB",
+  "pagina_do_conjunto": "https://dados.mma.gov.br/dataset/5be05b46-3bda-4f6e-9bf2-810e716fff33",
+  "licenca": "Creative Commons Atribuição (conforme o portal dados.mma.gov.br)",
+  "aviso_da_fonte": "Dados obtidos de forma automática; podem conter inconsistências, falhas de medição, lacunas temporais ou registros ainda não submetidos à validação técnica (dicionário de dados do MonitorAr).",
+  "arquivos_originais": [
+    {
+      "nome": "dados_monitorar_2024.zip",
+      "url": "https://dados.mma.gov.br/dataset/5be05b46-3bda-4f6e-9bf2-810e716fff33/resource/b24d6cfa-4465-4124-a6c4-ec96ff7b7f9f/download/dados_monitorar_2024.zip",
+      "publicado_no_portal_em": "2025-12-19",
+      "bytes": 22074775,
+      "sha256": "765e2e0e4fa9569d463e6816af5891daefba05fb04c777d25feaa8b6914659b6",
+      "data_download": "2026-11-08",
+      "linhas_mantidas": 46027
+    },
+    {
+      "nome": "dados_monitorar_2025.zip",
+      "url": "https://dados.mma.gov.br/dataset/5be05b46-3bda-4f6e-9bf2-810e716fff33/resource/e4f35322-b8a7-423c-bc12-21bbd0804a0a/download/dados_monitorar_2025.zip",
+      "publicado_no_portal_em": "2026-02-04",
+      "bytes": 31784392,
+      "sha256": "5a19031caf1c989286ed4fa49f62b1dab2ce2ae6a19200c731d60ebcfee7b010",
+      "data_download": "2026-11-08",
+      "linhas_mantidas": 46726
+    }
+  ],
+  "colunas_originais_por_arquivo": {
+    "dados_monitorar_2024.zip": [
+      "no_fonte_dados",
+      "dh_medicao",
+      "nu_iqar",
+      "nu_concentracao",
+      "st_situacao_item",
+      "cd_flag",
+      "ds_flag",
+      "st_situacao_iqar",
+      "no_item_monitorado",
+      "cd_normalizado",
+      "id_estacao",
+      "cod_estacao",
+      "no_estacao",
+      "nu_latitude",
+      "nu_longitude",
+      "st_estacao",
+      "id_municipio",
+      "no_municipio",
+      "sg_uf"
+    ],
+    "dados_monitorar_2025.zip": [
+      "no_fonte_dados",
+      "dh_medicao",
+      "nu_iqar",
+      "nu_concentracao",
+      "st_situacao",
+      "cd_flag",
+      "ds_flag",
+      "st_situacao_iqar",
+      "no_item_monitorado",
+      "cd_normalizado",
+      "id_estacao",
+      "cod_estacao",
+      "no_estacao",
+      "nu_latitude",
+      "nu_longitude",
+      "st_estacao",
+      "id_municipio",
+      "no_municipio",
+      "sg_uf"
+    ]
+  },
+  "filtro_aplicado": {
+    "sg_uf": "SP",
+    "id_estacao": [
+      "125",
+      "126",
+      "127",
+      "128",
+      "134",
+      "139"
+    ]
+  },
+  "colunas_acrescentadas": {
+    "arquivo_origem": "nome do arquivo oficial de onde a linha foi copiada"
+  },
+  "valores_alterados": "nenhum (todas as células copiadas como texto)",
+  "linhas_por_estacao_e_parametro": {
+    "125|Parque D.Pedro II|MP10": 2952,
+    "125|Parque D.Pedro II|MP2,5": 6965,
+    "125|Parque D.Pedro II|NO2": 47,
+    "125|Parque D.Pedro II|O3": 5884,
+    "126|Congonhas|CO": 9,
+    "126|Congonhas|MP10": 3880,
+    "126|Congonhas|MP2,5": 10251,
+    "126|Congonhas|NO2": 1458,
+    "126|Congonhas|SO2": 27,
+    "127|Ibirapuera|MP2,5": 7491,
+    "127|Ibirapuera|NO2": 8,
+    "127|Ibirapuera|O3": 8640,
+    "128|Mooca|CO": 120,
+    "128|Mooca|MP2,5": 6847,
+    "128|Mooca|O3": 8536,
+    "134|Diadema|MP10": 9143,
+    "134|Diadema|O3": 4287,
+    "139|S.André-Capuava|BENZENO": 3,
+    "139|S.André-Capuava|MP10": 10318,
+    "139|S.André-Capuava|NO2": 18,
+    "139|S.André-Capuava|O3": 5609,
+    "139|S.André-Capuava|SO2": 260
+  },
+  "total_de_linhas": 92753,
+  "gerado_em": "2026-11-08T13:45:31",
+  "gerado_por": "scripts/preparar_dados_monitorar.py"
+}

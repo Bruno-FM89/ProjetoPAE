@@ -1,0 +1,147 @@
+{
+  "descricao": "Medições de temperatura e umidade relativa do ar feitas por registradores instalados pela UNAS em residências de Heliópolis.",
+  "origem": "Google Drive da UNAS — pasta 'Dados dos termômetros' (planilhas exportadas do programa do registrador).",
+  "gerado_em": "2026-11-12 11:20",
+  "privacidade": "Os nomes dos arquivos (nomes de moradores) foram substituídos por identificadores anônimos; endereços não são usados. A correspondência fica só em data/termometros/bruto/correspondencia.csv, fora do Git.",
+  "unidades": {
+    "temperatura_c": "°C",
+    "umidade_pct": "% (umidade relativa)"
+  },
+  "aparelhos": [
+    {
+      "termometro_id": "T1",
+      "sha256_arquivo_original": "e2827a61d45cfb8ae13dfe3119f65e925dc8ce45aa7cbf441dc5075bf02cd46f",
+      "leituras": 32000,
+      "primeira_leitura_lista": "2025-02-11 18:00:00",
+      "ultima_leitura_lista": "2025-09-21 23:10:00",
+      "modelo": "RC-51H",
+      "tipo_sensor": "Temperatura & Umidade(Interna)",
+      "intervalo": "0:10:0",
+      "fuso_horario": "UTC -03:00",
+      "primeira_leitura": "2025-02-11 18:00:00",
+      "ultima_leitura": "2025-09-21 23:10:00",
+      "leituras_informadas": 32000,
+      "resumo_do_aparelho": {
+        "temperatura_maximo": 32.1,
+        "umidade_maximo": 87.8,
+        "temperatura_minimo": 14.7,
+        "umidade_minimo": 30.8,
+        "temperatura_media": 22.1,
+        "umidade_media": 69.0
+      },
+      "intervalo_observado_min": 10.0,
+      "lacunas_na_serie": 0,
+      "problemas": [
+        "O arquivo termina em .xls, mas o conteúdo é do formato .xlsx (Excel 2007+)."
+      ]
+    },
+    {
+      "termometro_id": "T2",
+      "sha256_arquivo_original": "e6d44318e42283d099b164382a47701f6f4e79495aff3bfbcdbe5e389cd90921",
+      "leituras": 32000,
+      "primeira_leitura_lista": "2025-02-17 19:00:00",
+      "ultima_leitura_lista": "2025-09-28 00:10:00",
+      "modelo": "RC-51H",
+      "tipo_sensor": "Temperatura & Umidade(Interna)",
+      "intervalo": "0:10:0",
+      "fuso_horario": "UTC -03:00",
+      "primeira_leitura": "2025-02-17 19:00:00",
+      "ultima_leitura": "2025-09-28 00:10:00",
+      "leituras_informadas": 32000,
+      "resumo_do_aparelho": {
+        "temperatura_maximo": 32.3,
+        "umidade_maximo": 94.2,
+        "temperatura_minimo": 14.6,
+        "umidade_minimo": 40.4,
+        "temperatura_media": 21.7,
+        "umidade_media": 75.1
+      },
+      "intervalo_observado_min": 10.0,
+      "lacunas_na_serie": 0,
+      "problemas": [
+        "O arquivo termina em .xls, mas o conteúdo é do formato .xlsx (Excel 2007+)."
+      ]
+    },
+    {
+      "termometro_id": "T3",
+      "sha256_arquivo_original": "896fd8eea03b5f76eeac199e65b0770b8d74a7b68b7db48388c900f2ee957643",
+      "leituras": 32000,
+      "primeira_leitura_lista": "2024-11-01 19:00:00",
+      "ultima_leitura_lista": "2025-06-12 00:10:00",
+      "modelo": "RC-51H",
+      "tipo_sensor": "Temperatura & Umidade(Interna)",
+      "intervalo": "0:10:0",
+      "fuso_horario": "UTC -03:00",
+      "primeira_leitura": "2024-11-01 19:00:00",
+      "ultima_leitura": "2025-06-12 00:10:00",
+      "leituras_informadas": 32000,
+      "resumo_do_aparelho": {
+        "temperatura_maximo": 29.2,
+        "umidade_maximo": 95.6,
+        "temperatura_minimo": 19.6,
+        "umidade_minimo": 43.7,
+        "temperatura_media": 24.7,
+        "umidade_media": 72.1
+      },
+      "intervalo_observado_min": 10.0,
+      "lacunas_na_serie": 0,
+      "problemas": [
+        "O arquivo termina em .xls, mas o conteúdo é do formato .xlsx (Excel 2007+)."
+      ]
+    },
+    {
+      "termometro_id": "T4",
+      "sha256_arquivo_original": "cd5a9b3c0ddea52744340be2b62a3e5bbcba7507fbf4c631b4adebe94de30cf3",
+      "leituras": 32000,
+      "primeira_leitura_lista": "2025-02-11 18:20:00",
+      "ultima_leitura_lista": "2025-09-21 23:30:00",
+      "modelo": "RC-51H",
+      "tipo_sensor": "Temperatura & Umidade(Interna)",
+      "intervalo": "0:10:0",
+      "fuso_horario": "UTC -03:00",
+      "primeira_leitura": "2025-02-11 18:20:00",
+      "ultima_leitura": "2025-09-21 23:30:00",
+      "leituras_informadas": 32000,
+      "resumo_do_aparelho": {
+        "temperatura_maximo": 31.5,
+        "umidade_maximo": 89.0,
+        "temperatura_minimo": 18.4,
+        "umidade_minimo": 50.0,
+        "temperatura_media": 23.1,
+        "umidade_media": 76.4
+      },
+      "intervalo_observado_min": 10.0,
+      "lacunas_na_serie": 0,
+      "problemas": [
+        "O arquivo termina em .xls, mas o conteúdo é do formato .xlsx (Excel 2007+)."
+      ]
+    },
+    {
+      "termometro_id": "T5",
+      "sha256_arquivo_original": "459c8684a846e0ffc7769807f62787bc95ddeab58c3e58aebf87c9cc6cbca6ee",
+      "leituras": 32000,
+      "primeira_leitura_lista": "2025-02-11 18:00:00",
+      "ultima_leitura_lista": "2025-09-21 23:10:00",
+      "modelo": "RC-51H",
+      "tipo_sensor": "Temperatura & Umidade(Interna)",
+      "intervalo": "0:10:0",
+      "fuso_horario": "UTC -03:00",
+      "primeira_leitura": "2025-02-11 18:00:00",
+      "ultima_leitura": "2025-09-21 23:10:00",
+      "leituras_informadas": 32000,
+      "resumo_do_aparelho": {
+        "temperatura_maximo": 31.8,
+        "umidade_maximo": 91.3,
+        "temperatura_minimo": 16.2,
+        "umidade_minimo": 32.0,
+        "temperatura_media": 23.2,
+        "umidade_media": 75.9
+      },
+      "intervalo_observado_min": 10.0,
+      "lacunas_na_serie": 0,
+      "problemas": [
+        "O arquivo termina em .xls, mas o conteúdo é do formato .xlsx (Excel 2007+)."
+      ]
+    }
+  ]
+}

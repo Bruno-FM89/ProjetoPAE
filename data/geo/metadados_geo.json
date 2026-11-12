@@ -1,0 +1,94 @@
+{
+  "origem": "Google Drive da UNAS — pasta de dados geográficos de Heliópolis (Shapefiles).",
+  "gerado_em": "2026-11-12 11:21",
+  "conversao": "Coordenadas convertidas de SIRGAS 2000 / UTM 23S (metros) para WGS 84 (graus) com a biblioteca pyproj. Para mapas na escala de um bairro, a diferença entre SIRGAS 2000 e WGS 84 é menor que 1 metro.",
+  "areas": "Calculadas em m² no sistema original (UTM, em metros), pela fórmula do cadarço.",
+  "camadas": [
+    {
+      "camada": "recorte",
+      "tipo_geometria": "POLYGON",
+      "feicoes": 1,
+      "atributos_originais": [
+        "ID",
+        "NOME",
+        "area",
+        "area_m",
+        "AREA_1"
+      ],
+      "sistema_original": "SIRGAS_2000_UTM_zone_23S",
+      "epsg_original": 31983,
+      "codificacao_dbf": "UTF-8",
+      "partes_presentes": [
+        ".shp",
+        ".shx",
+        ".dbf",
+        ".prj",
+        ".cpg"
+      ],
+      "sha256_shp": "f58e61785b68d7a57bbf8fb6c499ef2b061939da11d82b01138423451b667561"
+    },
+    {
+      "camada": "quebradas",
+      "tipo_geometria": "POLYGON",
+      "feicoes": 7,
+      "atributos_originais": [
+        "ID",
+        "NOME",
+        "area",
+        "area km"
+      ],
+      "sistema_original": "SIRGAS_2000_UTM_zone_23S",
+      "epsg_original": 31983,
+      "codificacao_dbf": "UTF-8",
+      "partes_presentes": [
+        ".shp",
+        ".shx",
+        ".dbf",
+        ".prj",
+        ".cpg"
+      ],
+      "sha256_shp": "9a0cc3c61c3e371259cfc3513d60adfdc5224058b9f0f839384e9b864833a856"
+    },
+    {
+      "camada": "glebas",
+      "tipo_geometria": "POLYGON",
+      "feicoes": 15,
+      "atributos_originais": [
+        "Nome",
+        "ID"
+      ],
+      "sistema_original": "SIRGAS_2000_UTM_zone_23S",
+      "epsg_original": 31983,
+      "codificacao_dbf": "UTF-8",
+      "partes_presentes": [
+        ".shp",
+        ".shx",
+        ".dbf",
+        ".prj",
+        ".cpg"
+      ],
+      "sha256_shp": "0eb1a9ca90c86a3e1351a163c7faec2969708806fe744134fa6765b70f65c9f3"
+    },
+    {
+      "camada": "projetos_unas",
+      "tipo_geometria": "POINTZ",
+      "feicoes": 52,
+      "atributos_originais": [
+        "Name",
+        "descriptio",
+        "Tipo"
+      ],
+      "sistema_original": "SIRGAS 2000 / UTM zone 23S",
+      "epsg_original": 31983,
+      "codificacao_dbf": "UTF-8",
+      "partes_presentes": [
+        ".shp",
+        ".shx",
+        ".dbf",
+        ".prj",
+        ".cpg"
+      ],
+      "sha256_shp": "b66a120c0ea8dce768c229e4c69cb459a3e62b03dc54a7238b4da9bebb64ab34"
+    }
+  ]
+}

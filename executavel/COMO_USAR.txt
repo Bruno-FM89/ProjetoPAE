@@ -1,0 +1,34 @@
+INTELIGÊNCIA CLIMÁTICA PARA HELIÓPOLIS — COMO USAR
+===================================================
+
+Não é preciso instalar Python nem nenhum outro programa.
+
+1. Extraia (descompacte) TODO o arquivo PainelHeliopolis-Windows.zip numa pasta
+   do computador (botão direito no arquivo > "Extrair tudo...").
+   Não abra o programa de dentro do .zip.
+
+2. Abra a pasta PainelHeliopolis e dê dois cliques em PainelHeliopolis.exe.
+
+3. Vai abrir uma janela preta e, alguns segundos depois, o painel aparece no
+   navegador (Chrome, Edge ou outro). Na primeira vez pode demorar até 1 minuto.
+   Se o navegador não abrir sozinho, digite na barra de endereço o endereço que
+   aparece na janela preta (normalmente http://localhost:8501).
+
+4. Deixe a janela preta aberta enquanto usa o painel. Para encerrar, feche a
+   janela preta (e a aba do navegador).
+
+AVISOS DO WINDOWS
+- Se aparecer "O Windows protegeu o computador" (SmartScreen), clique em
+  "Mais informações" e depois em "Executar assim mesmo". O aviso aparece porque
+  o programa não tem assinatura digital paga; ele não instala nada no computador.
+- Se o Firewall perguntar sobre acesso à rede, você pode clicar em "Cancelar":
+  o painel funciona só neste computador.
+
+INTERNET
+- Todos os dados já estão dentro da pasta: o painel funciona sem internet.
+- Só o fundo de ruas do mapa precisa de internet. Sem conexão, o mapa aparece
+  sobre fundo branco, com todas as áreas e informações.
+
+PROBLEMAS
+- Se aparecer uma mensagem de erro, ela também é salva no arquivo
+  erro_ao_iniciar.txt, nesta pasta. Envie esse arquivo para a equipe do projeto.

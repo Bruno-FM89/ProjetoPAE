@@ -1,0 +1,7 @@
+id_estacao_monitorar,cod_estacao_uf,nome,municipio,endereco,latitude,longitude,fonte_localizacao,data_consulta_localizacao,codigo_qualar,fonte_codigo_qualar
+128,3,Mooca,São Paulo,"R BRESSER, 2341",-23.54973404499998,-46.60041664499994,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,85,pacote qualR (rOpenSci) - tabela cetesb_aqs
+127,5,Ibirapuera,São Paulo,"PRQ DO IBIRAPUERA, s/nº",-23.591841989999978,-46.66068750299996,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,83,pacote qualR (rOpenSci) - tabela cetesb_aqs
+125,1,Parque D.Pedro II,São Paulo,"PRQ D PEDRO II, s/nº",-23.54486269199998,-46.62777375099995,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,72,pacote qualR (rOpenSci) - tabela cetesb_aqs
+126,8,Congonhas,São Paulo,"AL DOS TUPINIQUINS, 1571",-23.616320078999934,-46.66346552699997,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,73,pacote qualR (rOpenSci) - tabela cetesb_aqs
+134,15,Diadema,Diadema,"R BENJAMIN CONSTANT, 3",-23.685938798999928,-46.61170114199996,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,92,pacote qualR (rOpenSci) - tabela cetesb_aqs
+139,18,S.André-Capuava,Santo André,"R MANAGUA, 02",-23.63980369899997,-46.49163676599994,CETESB - serviço ArcGIS QUALAR (camada QUALAR_DADOSHORARIOS_PTO),2026-11-08,100,pacote qualR (rOpenSci) - tabela cetesb_aqs

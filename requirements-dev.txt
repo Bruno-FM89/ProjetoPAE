@@ -1,0 +1,12 @@
+# Para desenvolver: testes, preparar dados e gerar o executável.
+#   pip install -r requirements-dev.txt
+#   python -m pytest
+-r requirements-db.txt
+pytest>=8
+# leitura das planilhas dos termômetros (scripts/preparar_dados_termometros.py)
+openpyxl>=3.1
+# conversão dos Shapefiles para GeoJSON (scripts/preparar_dados_geograficos.py)
+pyshp>=2.3
+pyproj>=3.6
+# geração do executável (executavel/gerar_executavel.bat)
+pyinstaller>=6.10

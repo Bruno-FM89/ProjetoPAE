@@ -1,0 +1,29 @@
+# --- segredos e ambiente ---------------------------------------------------
+.env
+.venv/
+venv/
+
+# --- arquivos temporários do Python -------------------------------------------
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# --- DADOS PESSOAIS: nunca enviar ao GitHub ------------------------------------
+# Planilhas originais dos termômetros (o nome do arquivo identifica moradores),
+# a tabela que liga cada planilha ao seu número anônimo e os Shapefiles originais.
+data/termometros/bruto/
+data/geo/bruto/
+# Qualquer cópia do documento de resumo da UNAS (contém endereços)
+*Dados dos term*metros*
+
+# --- executável (vai para a Release do GitHub, não para o repositório) ----------
+build/
+dist/
+*.exe
+build_log.txt
+erro_ao_iniciar.txt
+
+# --- ferramentas locais -----------------------------------------------------------
+.claude/
+.vscode/
+.idea/

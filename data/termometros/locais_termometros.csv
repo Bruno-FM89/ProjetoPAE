@@ -1,0 +1,6 @@
+termometro_id;nome_exibicao;quebrada;localizacao_validada;observacao
+T1;Termômetro 1;;nao;Região ainda não informada.
+T2;Termômetro 2;;nao;Região ainda não informada.
+T3;Termômetro 3;Lagoa;nao;Região sugerida pelo nome da planilha original, que cita “Lagoa”. Aguarda confirmação da UNAS.
+T4;Termômetro 4;Lagoa;nao;Região sugerida pelo nome da planilha original, que cita “Lagoa”. Aguarda confirmação da UNAS.
+T5;Termômetro 5;;nao;Região ainda não informada.

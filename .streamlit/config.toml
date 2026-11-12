@@ -1,0 +1,16 @@
+# Configuração visual do Streamlit (lida automaticamente ao rodar "streamlit run app.py").
+# As cores devem combinar com os tokens de views/estilo.py.
+
+[theme]
+base = "light"                       # tema claro
+primaryColor = "#0F5E5A"             # verde-azulado: botões, seleção, destaques
+backgroundColor = "#F3F6F6"          # fundo da página
+secondaryBackgroundColor = "#E4ECEB" # fundo da barra lateral e dos campos
+textColor = "#12262B"                # texto
+font = "sans-serif"
+
+[browser]
+gatherUsageStats = false             # não envia estatísticas de uso ao Streamlit
+
+[client]
+toolbarMode = "minimal"              # esconde opções de desenvolvedor no menu do app
