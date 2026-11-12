@@ -155,7 +155,7 @@ Detalhes: [`docs/REQUISITOS_E_ARQUITETURA.md`](docs/REQUISITOS_E_ARQUITETURA.md)
 
 | Nome | RA / matrícula | Principais contribuições |
 |---|---|---|
-| *(preencher)* | | |
+| *(Bruno Fabrini /24.10075-2)* | | |
 | *(preencher)* | | |
 | *(preencher)* | | |
 
