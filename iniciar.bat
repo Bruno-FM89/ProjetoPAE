@@ -3,15 +3,15 @@ setlocal
 cd /d "%~dp0"
 title Inteligencia Climatica - Heliopolis
 
-rem --- procura um Python 3.10 ou mais novo (primeiro o lancador "py", depois "python") ---
+rem --- procura um Python 3.11 ou mais novo (primeiro o lancador "py", depois "python") ---
 set "PY="
-py -3 -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" >nul 2>nul && set "PY=py -3"
+py -3 -c "import sys; sys.exit(0 if sys.version_info>=(3,11) else 1)" >nul 2>nul && set "PY=py -3"
 if not defined PY (
-    python -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" >nul 2>nul && set "PY=python"
+    python -c "import sys; sys.exit(0 if sys.version_info>=(3,11) else 1)" >nul 2>nul && set "PY=python"
 )
 if not defined PY (
     echo.
-    echo Python 3.10 ou mais novo nao foi encontrado.
+    echo Python 3.11 ou mais novo nao foi encontrado.
     echo Instale em https://www.python.org/downloads/ e marque "Add python.exe to PATH".
     echo Depois de instalar, de dois cliques neste arquivo de novo.
     echo.
@@ -20,14 +20,15 @@ if not defined PY (
 )
 
 rem --- ambiente virtual (.venv): copia isolada do Python so para este projeto ---
-rem --- as bibliotecas do requirements.txt sao instaladas so na primeira vez ---
+rem --- as bibliotecas do requirements.txt sao instaladas na primeira vez ---
+rem --- (ou de novo, se o Streamlit instalado for mais antigo que 1.67, a versao minima) ---
 if not exist ".venv\Scripts\python.exe" (
     echo Criando ambiente virtual ^(so na primeira vez^)...
     %PY% -m venv .venv
     if errorlevel 1 goto erro
 )
 
-".venv\Scripts\python.exe" -c "import streamlit, pandas, plotly" >nul 2>nul
+".venv\Scripts\python.exe" -c "import streamlit, pandas, plotly, sys; sys.exit(0 if tuple(int(p) for p in streamlit.__version__.split('.')[:2]) >= (1, 67) else 1)" >nul 2>nul
 if errorlevel 1 (
     echo Instalando dependencias ^(so na primeira vez, pode levar alguns minutos^)...
     ".venv\Scripts\python.exe" -m pip install --upgrade pip >nul 2>nul

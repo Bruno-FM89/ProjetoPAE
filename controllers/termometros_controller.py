@@ -17,7 +17,7 @@ exibição e devolve tudo pronto para a View.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 
 import pandas as pd
 
@@ -43,13 +43,15 @@ class FiltrosTermometros:
 
     Atributos:
         ids: termômetros escolhidos (ex.: ("T1", "T3")).
-        inicio, fim: período (dias inteiros, inclusive).
+        inicio, fim: período, inclusive. Com ``date`` (só a data) vale o dia
+            inteiro; com ``datetime`` (data e hora) vale o horário exato — é o
+            que a opção "Quando todos mediram juntos" usa.
         agrupamento: "10min", "h", "D", "W" ou "MS" (veja ``AGRUPAMENTOS``).
     """
 
     ids: tuple[str, ...]
-    inicio: date
-    fim: date
+    inicio: date | datetime
+    fim: date | datetime
     agrupamento: str = "D"
 
 
@@ -97,9 +99,22 @@ class TermometrosController:
         """Do primeiro ao último dia com medição entre os termômetros escolhidos."""
         return self._dados.periodo(list(ids))
 
-    def periodo_comum(self, ids: list[str]) -> tuple[date, date] | None:
-        """Dias em que todos os termômetros escolhidos mediram ao mesmo tempo (ou None)."""
+    def periodo_comum(self, ids: list[str]) -> tuple[datetime, datetime] | None:
+        """Data e hora em que todos os termômetros escolhidos mediram ao mesmo tempo (ou None)."""
         return self._dados.periodo_comum(list(ids))
+
+    def comparacao_justa(self, f: FiltrosTermometros) -> bool:
+        """Verdadeiro quando TODAS as leituras do recorte estão dentro do período em comum.
+
+        Ou seja: nenhum termômetro tem horas medidas que os outros não têm. É
+        conferido nos próprios dados (primeira e última leitura do recorte), e
+        não só pelas datas, para não deixar passar diferenças de algumas horas.
+        """
+        comum = self.periodo_comum(list(f.ids))
+        d = self._recorte(f)
+        if comum is None or d.empty:
+            return False
+        return d[COL_DATA].min() >= pd.Timestamp(comum[0]) and d[COL_DATA].max() <= pd.Timestamp(comum[1])
 
     @staticmethod
     def grandezas() -> dict:
@@ -233,11 +248,10 @@ class TermometrosController:
                 f"A maior {g['nome'].lower()} média foi a do {maior['nome']} ({_num(maior[f'{prefixo}_media'])} {un}) e a "
                 f"menor, a do {menor['nome']} ({_num(menor[f'{prefixo}_media'])} {un}): diferença de {_num(diferenca)} {un}."
             )
-            comum = self.periodo_comum(list(f.ids))
-            if comum is None or comum[0] > f.inicio or comum[1] < f.fim:
+            if not self.comparacao_justa(f):
                 frases.append(
                     "Atenção: nem todos os termômetros mediram durante todo o período escolhido. Para uma comparação justa, "
-                    "use a opção “Período em que todos mediram juntos”."
+                    "use a opção “Quando todos mediram juntos”."
                 )
         mais_alto = resumo.loc[resumo[f"{prefixo}_max"].idxmax()]
         mais_baixo = resumo.loc[resumo[f"{prefixo}_min"].idxmin()]

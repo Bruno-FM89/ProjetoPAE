@@ -120,7 +120,7 @@ dados dos termômetros".
    `AnaliseTermometros.resumo` → tabela de volta para a página.
 3. `scripts/preparar_dados_termometros.py`: troca os nomes por números e grava um arquivo único;
    `scripts/preparar_dados_geograficos.py`: converte as coordenadas dos Shapefiles (metros → latitude/longitude).
-4. Rodar `python -m pytest` (ou mostrar o resultado gravado): 228 testes passando.
+4. Rodar `python -m pytest` (ou mostrar o resultado gravado): 238 testes passando.
 
 ## 8. Executável, GitHub e README (8:15–9:15)
 

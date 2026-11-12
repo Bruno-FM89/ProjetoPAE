@@ -5,17 +5,17 @@ set -e
 # Entra na pasta onde este arquivo está (a pasta do projeto).
 cd "$(dirname "$0")"
 
-# Procura um Python 3.10 ou mais novo (tenta "python3" e depois "python").
+# Procura um Python 3.11 ou mais novo (tenta "python3" e depois "python").
 PY=""
 for candidato in python3 python; do
     if command -v "$candidato" >/dev/null 2>&1 && \
-       "$candidato" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; then
+       "$candidato" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 11) else 1)' 2>/dev/null; then
         PY="$candidato"
         break
     fi
 done
 if [ -z "$PY" ]; then
-    echo "Python 3.10 ou mais novo nao encontrado. Instale em https://www.python.org/downloads/ e rode de novo."
+    echo "Python 3.11 ou mais novo nao encontrado. Instale em https://www.python.org/downloads/ e rode de novo."
     read -r -p "Pressione Enter para sair..." _ || true
     exit 1
 fi
@@ -26,8 +26,9 @@ if [ ! -x ".venv/bin/python" ]; then
     "$PY" -m venv .venv
 fi
 
-# Se as bibliotecas ainda não estão instaladas no ambiente, instala a partir do requirements.txt.
-if ! .venv/bin/python -c "import streamlit, pandas, plotly" >/dev/null 2>&1; then
+# Se as bibliotecas ainda não estão instaladas (ou se o Streamlit for mais antigo que 1.67,
+# a versão mínima), instala a partir do requirements.txt.
+if ! .venv/bin/python -c "import streamlit, pandas, plotly, sys; sys.exit(0 if tuple(int(p) for p in streamlit.__version__.split('.')[:2]) >= (1, 67) else 1)" >/dev/null 2>&1; then
     echo "Instalando dependencias (so na primeira vez, pode levar alguns minutos)..."
     .venv/bin/python -m pip install --upgrade pip >/dev/null 2>&1 || true
     .venv/bin/python -m pip install -r requirements.txt

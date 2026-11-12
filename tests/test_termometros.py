@@ -128,7 +128,8 @@ def dados_sinteticos(tmp_path):
 
 def test_periodo_comum_e_total(dados_sinteticos):
     assert dados_sinteticos.periodo(["T1", "T2"]) == (date(2025, 3, 1), date(2025, 3, 4))
-    assert dados_sinteticos.periodo_comum(["T1", "T2"]) == (date(2025, 3, 2), date(2025, 3, 3))
+    # O período em comum tem data E hora: da 1ª leitura do T2 à última do T1.
+    assert dados_sinteticos.periodo_comum(["T1", "T2"]) == (datetime(2025, 3, 2, 0, 0), datetime(2025, 3, 3, 23, 50))
 
 
 def test_locais_nome_quebrada_e_validacao(dados_sinteticos):
@@ -189,7 +190,8 @@ def test_dados_reais_conferem_com_resumo_do_aparelho(ctrl_real):
 
 def test_dados_reais_sem_lacunas_e_periodo_comum(ctrl_real):
     assert all(a["lacunas_na_serie"] == 0 for a in ctrl_real.metadados["aparelhos"])
-    assert ctrl_real.periodo_comum(ctrl_real.ids) == (date(2025, 2, 17), date(2025, 6, 12))
+    # T2 foi o último a começar (17/02 às 19h00) e T3 o primeiro a parar (12/06 às 00h10).
+    assert ctrl_real.periodo_comum(ctrl_real.ids) == (datetime(2025, 2, 17, 19, 0), datetime(2025, 6, 12, 0, 10))
 
 
 def test_interpretacoes_avisam_periodos_diferentes(ctrl_real):
@@ -214,3 +216,134 @@ def test_periodo_sem_dados(ctrl_real):
     f = FiltrosTermometros(("T3",), date(2025, 9, 1), date(2025, 9, 10))  # T3 parou em junho
     assert ctrl_real.sem_dados(f)
     assert ctrl_real.interpretacoes(f, COL_TEMP) == ["Não há medições dos termômetros escolhidos no período."]
+
+
+# --- regressão: período em comum com data E hora -------------------------------------------------
+# Antes da correção, o período em comum devolvia só as DATAS e o recorte pegava os
+# dias inteiros: em 17/02/2025 o T2 tinha 30 leituras e os outros 144. Estes testes
+# garantem que, no período em comum, todos os termômetros têm exatamente as mesmas horas.
+def criar_dados(tmp_path, series, lacunas=None):
+    """Cria ``DadosTermometros`` a partir de {id: (primeira leitura, número de leituras)}.
+
+    ``lacunas``: {id: (início, fim)} — leituras nesse intervalo são REMOVIDAS
+    (simula o aparelho desligado), sem colocar nada no lugar.
+    """
+    linhas = []
+    for tid, (inicio, n) in series.items():
+        for i in range(n):
+            linhas.append({"termometro_id": tid, "data_hora": pd.Timestamp(inicio) + pd.Timedelta(minutes=10 * i),
+                           "temperatura_c": 20 + (i % 144) / 14.4, "umidade_pct": 70 - (i % 144) / 7.2})
+    tabela = pd.DataFrame(linhas)
+    for tid, (ini, fim) in (lacunas or {}).items():
+        tira = (tabela["termometro_id"] == tid) & tabela["data_hora"].between(pd.Timestamp(ini), pd.Timestamp(fim))
+        tabela = tabela[~tira]
+    caminho = tmp_path / "medicoes.csv.gz"
+    tabela.to_csv(caminho, index=False)
+    return DadosTermometros(caminho, tmp_path / "nao_existe.json", tmp_path / "nao_existe.csv")
+
+
+def limites_por_termometro(recorte):
+    """Primeira leitura, última leitura e número de leituras de cada termômetro do recorte."""
+    return recorte.groupby("termometro_id")["data_hora"].agg(["min", "max", "count"])
+
+
+def test_periodo_comum_respeita_horarios_diferentes_no_mesmo_dia(tmp_path):
+    # T1: 01/03 00h00 → 03/03 23h50.  T2: 01/03 19h00 → 03/03 08h00.
+    dados = criar_dados(tmp_path, {"T1": ("2025-03-01 00:00", 3 * 144), "T2": ("2025-03-01 19:00", 223)})
+    comum = dados.periodo_comum(["T1", "T2"])
+    assert comum == (datetime(2025, 3, 1, 19, 0), datetime(2025, 3, 3, 8, 0))
+    limites = limites_por_termometro(dados.recorte(["T1", "T2"], *comum))
+    assert (limites["min"] == pd.Timestamp("2025-03-01 19:00")).all()
+    assert (limites["max"] == pd.Timestamp("2025-03-03 08:00")).all()
+    assert limites["count"].nunique() == 1 and limites["count"].iloc[0] == 223  # as mesmas horas para os dois
+
+
+def test_periodo_comum_sem_sobreposicao(tmp_path):
+    dados = criar_dados(tmp_path, {"T1": ("2025-03-01 00:00", 144), "T2": ("2025-03-05 00:00", 144)})
+    assert dados.periodo_comum(["T1", "T2"]) is None
+    assert dados.periodo_comum([]) is None
+    ctrl = TermometrosController(dados)
+    f = FiltrosTermometros(("T1", "T2"), date(2025, 3, 1), date(2025, 3, 5))
+    assert not ctrl.comparacao_justa(f)
+    assert any("nem todos os termômetros mediram" in frase for frase in ctrl.interpretacoes(f, COL_TEMP))
+
+
+def test_periodo_comum_com_um_so_termometro(tmp_path):
+    dados = criar_dados(tmp_path, {"T1": ("2025-03-01 18:20", 100), "T2": ("2025-03-01 00:00", 300)})
+    comum = dados.periodo_comum(["T1"])
+    assert comum == (datetime(2025, 3, 1, 18, 20), datetime(2025, 3, 2, 10, 50))  # 1ª e última leitura do T1
+    assert len(dados.recorte(["T1"], *comum)) == 100  # todas as leituras dele, nenhuma do T2
+
+
+def test_periodo_comum_muda_quando_muda_a_escolha(tmp_path):
+    dados = criar_dados(tmp_path, {
+        "T1": ("2025-03-01 00:00", 5 * 144),   # 01/03 → 05/03
+        "T2": ("2025-03-02 12:00", 144),       # 02/03 12h → 03/03 11h50
+        "T3": ("2025-03-04 06:00", 144),       # 04/03 06h → 05/03 05h50
+    })
+    assert dados.periodo_comum(["T1", "T2"]) == (datetime(2025, 3, 2, 12, 0), datetime(2025, 3, 3, 11, 50))
+    assert dados.periodo_comum(["T1", "T3"]) == (datetime(2025, 3, 4, 6, 0), datetime(2025, 3, 5, 5, 50))
+    assert dados.periodo_comum(["T2", "T3"]) is None
+    for ids in (["T1", "T2"], ["T1", "T3"]):
+        limites = limites_por_termometro(dados.recorte(ids, *dados.periodo_comum(ids)))
+        assert list(limites.index) == ids
+        assert limites["min"].nunique() == 1 and limites["max"].nunique() == 1 and limites["count"].nunique() == 1
+
+
+def test_lacuna_no_meio_nao_muda_limites_nem_e_preenchida(tmp_path):
+    # T2 fica desligado de 02/03 10h00 a 02/03 11h50 (12 leituras a menos).
+    dados = criar_dados(
+        tmp_path, {"T1": ("2025-03-01 00:00", 3 * 144), "T2": ("2025-03-01 00:00", 3 * 144)},
+        lacunas={"T2": ("2025-03-02 10:00", "2025-03-02 11:50")},
+    )
+    comum = dados.periodo_comum(["T1", "T2"])
+    assert comum == (datetime(2025, 3, 1, 0, 0), datetime(2025, 3, 3, 23, 50))  # a lacuna não encolhe o período
+    limites = limites_por_termometro(dados.recorte(["T1", "T2"], *comum))
+    assert limites.loc["T1", "count"] == 3 * 144
+    assert limites.loc["T2", "count"] == 3 * 144 - 12  # nada inventado no lugar da lacuna
+    assert not dados.recorte(["T1", "T2"], *comum)[[COL_TEMP, COL_UMID]].isna().any().any()
+    # O dia com lacuna não entra na amplitude diária média (só dias completos entram).
+    amplitude = AnaliseTermometros(dados.recorte(["T2"], *comum)).amplitude_diaria_media(COL_TEMP)
+    assert amplitude.loc["T2"] == pytest.approx(143 / 14.4)
+
+
+def test_periodo_comum_menor_que_um_dia_sem_dias_completos(tmp_path):
+    # Sobreposição de só 6 horas: dá para comparar, mas não há nenhum dia completo.
+    dados = criar_dados(tmp_path, {"T1": ("2025-03-01 00:00", 144), "T2": ("2025-03-01 18:00", 144)})
+    comum = dados.periodo_comum(["T1", "T2"])
+    assert comum == (datetime(2025, 3, 1, 18, 0), datetime(2025, 3, 1, 23, 50))
+    analise = AnaliseTermometros(dados.recorte(["T1", "T2"], *comum))
+    assert analise.resumo()["leituras"].tolist() == [36, 36]
+    assert analise.amplitude_diaria_media(COL_TEMP).empty  # sem dia completo, não calcula amplitude diária
+
+
+def test_datas_sem_hora_continuam_usando_dias_inteiros(tmp_path):
+    # "Todo o período" e "Escolher datas" mandam só datas: o recorte pega o dia inteiro.
+    dados = criar_dados(tmp_path, {"T1": ("2025-03-01 00:00", 3 * 144), "T2": ("2025-03-01 19:00", 223)})
+    limites = limites_por_termometro(dados.recorte(["T1", "T2"], date(2025, 3, 1), date(2025, 3, 1)))
+    assert limites.loc["T1", "count"] == 144 and limites.loc["T2", "count"] == 30
+
+
+def test_dados_reais_periodo_comum_tem_as_mesmas_horas_para_todos(ctrl_real):
+    comum = ctrl_real.periodo_comum(ctrl_real.ids)
+    f = FiltrosTermometros(tuple(ctrl_real.ids), *comum, "10min")
+    d = ctrl_real.medicoes(f)
+    limites = limites_por_termometro(d)
+    assert (limites["min"] == pd.Timestamp("2025-02-17 19:00")).all()
+    assert (limites["max"] == pd.Timestamp("2025-06-12 00:10")).all()
+    assert limites["count"].nunique() == 1  # mesmo número de leituras para os 5
+    por_dia = d.groupby(["termometro_id", d["data_hora"].dt.date]).size()
+    assert (por_dia.xs(date(2025, 2, 17), level=1) == 30).all()  # antes: T2 com 30 e os outros com 144
+    assert (por_dia.xs(date(2025, 6, 12), level=1) == 2).all()   # antes: T3 com 2 e os outros com 144
+    assert ctrl_real.comparacao_justa(f)
+    # A exportação usa o mesmo recorte: mesmas linhas para todos.
+    linhas = ctrl_real.exportar_csv(f).decode("utf-8").strip().splitlines()[1:]
+    contagem = pd.Series([linha.split(";")[0] for linha in linhas]).value_counts()
+    assert contagem.nunique() == 1 and len(contagem) == 5
+
+
+def test_dados_reais_so_com_as_datas_avisa_comparacao_injusta(ctrl_real):
+    # Usar só as datas do período em comum (o comportamento antigo) inclui horas a mais: o sistema avisa.
+    f = FiltrosTermometros(tuple(ctrl_real.ids), date(2025, 2, 17), date(2025, 6, 12))
+    assert not ctrl_real.comparacao_justa(f)
+    assert any("nem todos os termômetros mediram" in frase for frase in ctrl_real.interpretacoes(f, COL_TEMP))

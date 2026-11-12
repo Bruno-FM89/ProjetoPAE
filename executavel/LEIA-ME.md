@@ -13,8 +13,8 @@
 executavel\gerar_executavel.bat
 ```
 
-Requisitos: Windows, Python 3.11–3.13 e os dados preparados em `data/` (o script confere). Leva de 5 a 10
-minutos. Resultado testado: pasta de ~233 MB.
+Requisitos: Windows, Python 3.11–3.13 (o executável é gerado com 3.13) e os dados preparados em `data/` (o script confere). Leva de 5 a 10
+minutos. Último resultado (12/11/2026): pasta de ~227 MB e zip de 92,8 MB (SHA-256 em `docs/TESTES_REALIZADOS.md`).
 
 ## Por que estas escolhas
 
@@ -33,7 +33,9 @@ O teste automático foi feito na máquina de desenvolvimento simulando a ausênc
 1. Use um computador (ou máquina virtual / Windows Sandbox) **sem Python instalado**. Confirme: abra o Prompt de
    Comando e digite `python --version` — deve dizer que não foi encontrado (ou abrir a Microsoft Store).
 2. Baixe `PainelHeliopolis-Windows.zip` **da Release do GitHub** (não de um pendrive), para testar o arquivo real.
-3. Extraia, abra `PainelHeliopolis.exe` e anote:
+3. Confira se o arquivo é o mesmo que foi gerado: no PowerShell, `Get-FileHash PainelHeliopolis-Windows.zip` deve
+   mostrar o SHA-256 registrado em `docs/TESTES_REALIZADOS.md`.
+4. Extraia, abra `PainelHeliopolis.exe` e anote:
 
 | Verificação | OK? |
 |---|---|
@@ -42,11 +44,12 @@ O teste automático foi feito na máquina de desenvolvimento simulando a ausênc
 | O navegador abriu sozinho em menos de 1 minuto? | |
 | Visão Geral mostra 5 termômetros, 6 estações e 7 quebradas? | |
 | Temperatura e Umidade: gráficos aparecem; o botão "Baixar esta tabela" baixa o CSV? | |
+| Temperatura e Umidade: o período diz "17/02/2025 às 19h00 a 12/06/2025 às 00h10" e "Leituras analisadas 82.240"? | |
 | Mapa aparece (com ruas, se houver internet)? | |
 | **Sem internet** (Wi-Fi desligado): o painel abre e o mapa aparece sobre fundo branco? | |
 | Qualidade do Ar, Análise Estatística, Sobre os Dados e Ajuda abrem sem erro? | |
 | Fechar a janela preta encerra o painel? | |
 | Abrir duas vezes: a segunda usa outra porta (8502) e funciona? | |
 
-4. Registre o resultado (data, versão do Windows, quem testou) em `docs/TESTES_REALIZADOS.md` e no
+5. Registre o resultado (data, versão do Windows, quem testou) em `docs/TESTES_REALIZADOS.md` e no
    `CHECKLIST_RUBRICA.md`.

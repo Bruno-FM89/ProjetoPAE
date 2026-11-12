@@ -9,7 +9,7 @@ cada critério lista o que ainda pode custar pontos. Resultados de testes: `docs
 | Explicações no Streamlit | 1,0 | Forte | Ainda não validado com usuários reais da UNAS |
 | Executável | 1,5 | **Bom, com pendência** | Teste em computador sem Python **não feito**; Release não publicada |
 | README | 0,8 | **Bom, com pendência** | Link da Release e nomes dos integrantes **em branco** |
-| Qualidade do código | 1,0 | Forte | Arquivos grandes herdados da V2 (`painel_controller.py`, `fontes.py`) |
+| Qualidade do código | 1,0 | Forte (2 erros da auditoria corrigidos) | Arquivos grandes herdados da V2 (`painel_controller.py`, `fontes.py`) |
 | Funcionalidades | 1,2 | Forte | Termômetros sem localização validada; feedbacks sem validação da UNAS |
 | Organização e commits | 0,5 | **Pendente** | Commits ainda não feitos; depende de todos os integrantes |
 | **Total** | **7,0** | | |
@@ -56,11 +56,14 @@ validação em `FEEDBACK_UNAS.md`). Algumas tabelas da V2 (seção Qualidade do 
 erro em português), `painel_heliopolis.spec` (PyInstaller, modo pasta, só dados preparados, sem dependências
 geográficas nativas), `gerar_executavel.bat` (reproduzível), `COMO_USAR.txt`, `LEIA-ME.md` com o teste manual.
 
-**Testado (na máquina de desenvolvimento, Windows 11):**
-- build concluído sem erros; pasta de 233 MB; nenhuma planilha/arquivo bruto incluído (verificado);
-- executável copiado para outra pasta e aberto com **PATH sem Python** e sem variáveis do Python: servidor
-  pronto em ~8 s, escolheu a porta 8502 porque a 8501 estava ocupada;
+**Testado (na máquina de desenvolvimento, Windows 11, que TEM Python instalado):**
+- executável **gerado de novo após as correções** (12/11/2026): zip de 92,8 MB, SHA-256
+  `9C753E9908BFD3880B470CC38F43397989FF285AED29A8F911FE9E58135A724B`; `python313.dll` incluída; nenhuma
+  planilha/arquivo bruto, nome de morador ou senha incluídos (verificado no zip);
+- zip extraído fora da pasta do projeto e aberto com **PATH sem Python** e sem variáveis do Python: endereço
+  mostrado em menos de 1 s; mostrou o período em comum com hora (código corrigido está no executável);
 - as 7 páginas abertas no navegador a partir do executável, com gráficos, mapa e conferência "30 de 30";
+- (build anterior) com a porta 8501 ocupada escolheu a 8502;
 - caminho de erro: com `app.py` removido, mostrou a mensagem em português, gravou `erro_ao_iniciar.txt` e saiu
   com código 1.
 
@@ -89,7 +92,15 @@ componentes (`estilo.explicar_grafico`, `_base`, filtros dos termômetros compar
 caminhos relativos à raiz que funcionam com e sem empacotamento; dependências separadas
 (`requirements.txt`, `-db`, `-dev`); correções de compatibilidade com pandas 3; aviso do Streamlit eliminado.
 
-**Testado:** 228 testes automáticos (`python -m pytest`).
+**Testado:** 238 testes automáticos (`python -m pytest`) em 3 ambientes: `.venv` do projeto, ambiente novo com Python 3.14 e ambiente novo com as versões mínimas (Streamlit 1.67.0, pandas 2.2.3, Plotly 5.24.1).
+
+**Corrigido após a auditoria externa (12/11/2026):**
+- **Período em comum dos termômetros:** devolvia só as datas e o recorte pegava os dias inteiros (em 17/02/2025 o
+  Termômetro 2 tinha 30 leituras e os outros 144). Agora usa data **e hora**; os 5 termômetros têm exatamente as
+  mesmas leituras. 10 testes de regressão novos (`tests/test_termometros.py`, `tests/test_paginas_v4.py`).
+- **Versão mínima do Streamlit:** `requirements.txt` aceitava 1.50, mas o código usa `persist_state` (1.59+) e
+  `st.Page(help=...)` (1.67+). Mínimo corrigido para 1.67, conferido nas wheels oficiais e testado em ambientes
+  virtuais novos (veja `docs/TESTES_REALIZADOS.md`). Os iniciadores reinstalam se o Streamlit for antigo.
 
 **Pendências / riscos:** `controllers/painel_controller.py` (≈650 linhas) e `models/fontes.py` (≈650 linhas),
 herdados da V2, são grandes; não foram divididos para não arriscar regressões. Não há verificador de tipos

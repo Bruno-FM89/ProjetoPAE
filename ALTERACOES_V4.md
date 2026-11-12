@@ -41,7 +41,18 @@ feedbacks reais da UNAS e preparação para a avaliação final (executável, do
   `json` + Plotly. Evita empacotar GDAL/PROJ no executável (fonte comum de falhas).
 - **Termômetros nunca viram pontos no mapa:** não há coordenadas validadas e seriam endereços de moradores. A
   região (quebrada) só é destacada quando validada pela UNAS.
-- **Período em comum como padrão:** os aparelhos mediram em datas diferentes; comparar meses diferentes
-  enviesaria a comparação.
+- **Período em comum como padrão, com data E hora:** os aparelhos mediram em datas diferentes; comparar meses
+  diferentes enviesaria a comparação. O período em comum começa na primeira leitura em que todos os escolhidos já
+  estavam ligados e termina na última em que todos ainda estavam (veja a seção 4).
 - **Nenhuma medição inventada:** dias sem leitura ficam vazios em todos os gráficos.
 - **Executável em modo pasta (onedir):** abre mais rápido que o arquivo único; distribuído como .zip.
+
+## 4. Correções após a auditoria externa (12/11/2026)
+
+| Problema | Correção | Arquivos |
+|---|---|---|
+| O "período em comum" devolvia só as datas e o recorte pegava os dias inteiros. Em 17/02/2025 o Termômetro 2 tinha 30 leituras e os outros 144; em 12/06/2025 o Termômetro 3 tinha 2 e os outros 144. | O período em comum passou a ter **data e hora** (começa quando o último aparelho foi ligado, termina quando o primeiro foi desligado). Com só datas ("Todo o período", "Escolher datas") o recorte continua usando dias inteiros. O aviso de comparação injusta agora confere as próprias leituras. A tela mostra a hora no período e na tabela "Quem é cada termômetro". | `models/termometros.py`, `controllers/termometros_controller.py`, `views/filtros_termometros.py`, `views/pagina_termometros.py`, `views/estilo.py`, `views/pagina_ajuda.py` |
+| `requirements.txt` aceitava Streamlit 1.50, mas o código usa `persist_state` (1.59+) e `st.Page(help=...)` (1.67+). | Mínimo `streamlit>=1.67,<2`, descoberto nas wheels oficiais e testado em ambientes novos. Iniciadores exigem Python 3.11+ e reinstalam se o Streamlit do `.venv` for antigo. | `requirements.txt`, `iniciar.bat`, `iniciar.sh`, `README.md`, `GUIA_MANUTENCAO.md` |
+| Os 228 testes não pegavam esses erros. | 10 testes novos (238 no total), incluindo dados reais com a contagem de leituras por dia. | `tests/test_termometros.py`, `tests/test_paginas_v4.py` |
+
+O executável foi gerado de novo. Resultados e o que continua sem teste: `docs/TESTES_REALIZADOS.md`.

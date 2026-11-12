@@ -1,5 +1,13 @@
-# Dependências para RODAR o painel (streamlit run app.py).
-streamlit>=1.50,<2
+# Dependências para RODAR o painel (streamlit run app.py). Python 3.11 ou mais novo.
+#
+# Streamlit 1.67 é a versão mínima: é a primeira em que st.Page aceita help=
+# (o texto de ajuda de cada item do menu). O parâmetro persist_state="session"
+# dos widgets (lembrar as escolhas ao trocar de página) existe desde a 1.59.
+# Com versões anteriores o painel quebra ao abrir.
+# Plotly 5.24 é a primeira com go.Scattermap (o mapa de Heliópolis).
+# Versões mínimas testadas juntas: streamlit 1.67.0, pandas 2.2.3, plotly 5.24.1.
+# Versões usadas no executável: veja docs/TESTES_REALIZADOS.md.
+streamlit>=1.67,<2
 pandas>=2.2,<4
 plotly>=5.24,<8
 numpy>=1.26

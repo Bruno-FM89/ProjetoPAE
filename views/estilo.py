@@ -17,6 +17,7 @@ componentes com layout próprio. Todo texto vindo de dados passa por
 
 from __future__ import annotations
 
+from datetime import datetime
 import html  # html.escape troca < > & por códigos seguros
 
 import streamlit as st
@@ -162,6 +163,18 @@ def percentual(valor: float | None, casas: int = 0) -> str:
 def data_br(valor) -> str:
     """Timestamp/data → ``"31/12/2025"``."""
     return valor.strftime("%d/%m/%Y")
+
+
+def momento_br(valor) -> str:
+    """Data, ou data e hora, no padrão brasileiro.
+
+    ``date(2025, 2, 17)`` → ``"17/02/2025"``;
+    ``datetime(2025, 2, 17, 19, 0)`` → ``"17/02/2025 às 19h00"``.
+    Usado para mostrar o período em comum dos termômetros, que tem hora exata.
+    """
+    if isinstance(valor, datetime):  # datetime antes de date: datetime é um "tipo filho" de date
+        return valor.strftime("%d/%m/%Y às %Hh%M")
+    return data_br(valor)
 
 
 # --- componentes ---------------------------------------------------------------------

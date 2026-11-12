@@ -59,8 +59,8 @@ GLOSSARIO = [
      "Média de cada hora do dia (0h a 23h), juntando todos os dias do período. Mostra o “ritmo” de um dia comum: "
      "a que horas costuma esquentar e esfriar."),
     ("Período em que todos mediram juntos",
-     "Os dias em que todos os termômetros escolhidos estavam funcionando ao mesmo tempo. É a forma justa de "
-     "comparar locais, porque compara as mesmas datas."),
+     "O intervalo (com data e hora) em que todos os termômetros escolhidos estavam funcionando ao mesmo tempo. "
+     "É a forma justa de comparar locais, porque compara exatamente as mesmas horas."),
     ("Quebrada",
      "Nome usado na comunidade para as sub-regiões de Heliópolis (ex.: Mina, Lagoa, Imperador / Pilões). O mapa "
      "mostra as 7 quebradas dos arquivos da UNAS."),

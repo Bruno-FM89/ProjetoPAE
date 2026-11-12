@@ -19,7 +19,7 @@ from datetime import date
 import streamlit as st
 
 from controllers.termometros_controller import FiltrosTermometros, TermometrosController
-from views.estilo import data_br
+from views.estilo import momento_br
 
 #: Opções de período (chave interna → texto do botão).
 OPCOES_PERIODO = {
@@ -55,8 +55,8 @@ def renderizar(ctrl: TermometrosController, prefixo: str, agrupamento: bool = Tr
                 "2. Período", list(OPCOES_PERIODO), format_func=OPCOES_PERIODO.get, default="comum",
                 key=f"{prefixo}_modo_periodo", persist_state="session",
                 help=(
-                    "Os termômetros não mediram todos nas mesmas datas. “Quando todos mediram juntos” usa só os dias em "
-                    "que TODOS os escolhidos estavam funcionando — é a forma justa de comparar."
+                    "Os termômetros não mediram todos nas mesmas datas. “Quando todos mediram juntos” usa só o intervalo "
+                    "(com data e hora) em que TODOS os escolhidos estavam funcionando — é a forma justa de comparar."
                 ),
             ) or "comum"
             inicio, fim = _periodo(ctrl, ids, modo, prefixo)
@@ -73,12 +73,19 @@ def renderizar(ctrl: TermometrosController, prefixo: str, agrupamento: bool = Tr
                 )
         else:
             agrup = "10min"
-        st.caption(f"Período analisado: {data_br(inicio)} a {data_br(fim)}.")
+        st.caption(f"Período analisado: {momento_br(inicio)} a {momento_br(fim)}." + (
+            " O primeiro e o último dia podem estar incompletos — igualmente para todos os termômetros escolhidos."
+            if modo == "comum" and len(ids) > 1 else ""
+        ))
     return FiltrosTermometros(tuple(ids), inicio, fim, agrup)
 
 
 def _periodo(ctrl: TermometrosController, ids: list[str], modo: str, prefixo: str) -> tuple[date, date]:
-    """Calcula o período conforme a opção escolhida (e mostra o seletor de datas, se for o caso)."""
+    """Calcula o período conforme a opção escolhida (e mostra o seletor de datas, se for o caso).
+
+    * "comum": devolve data E hora (``datetime``) — o recorte respeita o horário exato;
+    * "todo" e "escolher": devolvem só datas (``date``) — o recorte usa dias inteiros.
+    """
     total = ctrl.periodo(ids)
     if modo == "comum":
         comum = ctrl.periodo_comum(ids)

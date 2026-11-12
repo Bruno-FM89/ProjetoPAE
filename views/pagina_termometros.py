@@ -23,7 +23,7 @@ from controllers.sistema import Sistema
 from controllers.termometros_controller import COL_TEMP, COL_UMID, FiltrosTermometros, TermometrosController
 from views import estilo, filtros_termometros
 from views import graficos_comunidade as gc
-from views.estilo import CONFIG_PLOTLY, data_br, inteiro, numero, percentual
+from views.estilo import CONFIG_PLOTLY, inteiro, momento_br, numero, percentual
 
 FONTE = "Fonte: termômetros instalados pela UNAS em residências de Heliópolis (identificação anônima)."
 
@@ -113,8 +113,8 @@ def _caixa_origem(ctrl: TermometrosController) -> None:
                 "Termômetro": tabela["nome"],
                 "Região (quebrada)": [q or "não informada" for q in tabela["quebrada"]],
                 "Situação da região": ["confirmada pela UNAS" if v else "a confirmar" for v in tabela["localizacao_validada"]],
-                "Primeira leitura": [data_br(d) for d in tabela["inicio"]],
-                "Última leitura": [data_br(d) for d in tabela["fim"]],
+                "Primeira leitura": [momento_br(d) for d in tabela["inicio"]],
+                "Última leitura": [momento_br(d) for d in tabela["fim"]],
                 "Leituras": [inteiro(n) for n in tabela["leituras"]],
             }),
             hide_index=True, width="stretch",
@@ -140,7 +140,7 @@ def _indicadores(ctrl: TermometrosController, f: FiltrosTermometros, coluna: str
         {"rotulo": "Máxima registrada", "valor": numero(mais_alto[f"{p}_max"]), "unidade": g["unidade"], "nota": mais_alto["nome"]},
         {"rotulo": "Mínima registrada", "valor": numero(mais_baixo[f"{p}_min"]), "unidade": g["unidade"], "nota": mais_baixo["nome"]},
         {"rotulo": "Leituras analisadas", "valor": inteiro(resumo["leituras"].sum()), "nota": f"{len(resumo)} termômetro(s)"},
-        {"rotulo": "Período", "valor": data_br(f.inicio), "nota": f"até {data_br(f.fim)}", "compacto": True},
+        {"rotulo": "Período", "valor": momento_br(f.inicio), "nota": f"até {momento_br(f.fim)}", "compacto": True},
     ]
     estilo.faixa_indicadores(itens)
 
@@ -311,8 +311,10 @@ def _entenda() -> None:
         "juntar as leituras e mostrar a média de cada hora, dia, semana ou mês. Isso não altera os dados originais.",
         "Período em que todos mediram juntos": "Os termômetros começaram e terminaram de medir em datas diferentes (veja "
         "“Quem é cada termômetro e quando mediu”, no topo da página). Comparar períodos diferentes seria injusto: um mês de "
-        "verão é mais quente que um de inverno, por exemplo. Por isso a comparação usa, por padrão, só os dias em que "
-        "todos os termômetros escolhidos estavam medindo.",
+        "verão é mais quente que um de inverno, por exemplo. Por isso a comparação usa, por padrão, só o intervalo em que "
+        "todos os termômetros escolhidos estavam medindo — com data e hora exatas: começa quando o último aparelho foi "
+        "ligado e termina quando o primeiro foi desligado. O primeiro e o último dia podem ficar incompletos, mas "
+        "igualmente para todos.",
     }
     for titulo, texto in itens.items():
         with st.expander(titulo):

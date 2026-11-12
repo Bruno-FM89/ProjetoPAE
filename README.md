@@ -74,7 +74,8 @@ Não precisa de internet (só o fundo de ruas do mapa usa internet). Instruçõe
 
 ## 6. Instalação para desenvolvedores
 
-Requisitos: Python 3.11–3.13 (o executável foi gerado com 3.13).
+Requisitos: Python 3.11 ou mais novo (testado com 3.13 e 3.14; o executável foi gerado com 3.13) e Streamlit 1.67 ou
+mais novo — o `requirements.txt` já garante isso. Com Streamlit mais antigo o painel não abre.
 
 ```bash
 python -m venv .venv
@@ -87,7 +88,7 @@ Ferramentas de desenvolvimento (testes, preparação dos dados, executável):
 
 ```bash
 pip install -r requirements-dev.txt
-python -m pytest                  # 228 testes automáticos
+python -m pytest                  # 238 testes automáticos
 ```
 
 Quem já tem Python pode usar os iniciadores de dois cliques: `iniciar.bat` (Windows), `iniciar.command` (macOS),
@@ -140,7 +141,9 @@ Detalhes: [`docs/REQUISITOS_E_ARQUITETURA.md`](docs/REQUISITOS_E_ARQUITETURA.md)
 
 - **Termômetros:** 5 casas não representam toda a comunidade; medem o ambiente onde o aparelho foi colocado
   (provavelmente dentro das casas), não a rua; cômodo e altura de instalação ainda não foram registrados; os
-  aparelhos mediram em períodos diferentes; a quebrada de cada termômetro ainda **não foi confirmada** pela UNAS.
+  aparelhos mediram em períodos diferentes (por isso a comparação usa, por padrão, só o intervalo — com data e
+  hora — em que todos mediram juntos; o primeiro e o último dia desse intervalo são incompletos, igualmente para
+  todos); a quebrada de cada termômetro ainda **não foi confirmada** pela UNAS.
 - **Qualidade do ar:** não há estação dentro de Heliópolis; os dados do MonitorAr são automáticos e não validados
   pela fonte e trazem o índice (não a concentração).
 - **Mapas:** arquivos de 2019–2020; as quebradas mapeadas não cobrem todo o recorte.

@@ -79,5 +79,7 @@ Pelo terminal (GitHub CLI), em vez dos passos 3–4:
 gh release create v4.0.0 dist/PainelHeliopolis-Windows.zip --title "V4 — Termômetros da UNAS, mapa e navegação simplificada" --notes-file executavel/COMO_USAR.txt
 ```
 
-O arquivo zip gerado em 12/11/2026 tem 92,8 MB (a pasta extraída, ~233 MB); o limite por arquivo de Release do GitHub é 2 GB. **Não** versione o
+O arquivo zip gerado em 12/11/2026 (após as correções da auditoria) tem 92,8 MB — 97.300.056 bytes, SHA-256
+`9C753E9908BFD3880B470CC38F43397989FF285AED29A8F911FE9E58135A724B` (a pasta extraída, ~227 MB). Se gerar de novo,
+o hash muda: anote o novo na descrição da Release; o limite por arquivo de Release do GitHub é 2 GB. **Não** versione o
 executável no repositório (ele já está no `.gitignore`).

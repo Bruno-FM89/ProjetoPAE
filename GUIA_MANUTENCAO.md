@@ -17,7 +17,7 @@ que faz cada parte.
 | Linux | `./iniciar.sh` |
 
 Na primeira vez, o iniciador cria um ambiente virtual (`.venv`) e instala as bibliotecas. Isso exige internet
-e Python 3.10 ou mais novo. Depois, o navegador abre em `http://localhost:8501`.
+e Python 3.11 ou mais novo. Depois, o navegador abre em `http://localhost:8501`.
 
 **Pelo terminal:**
 
@@ -205,7 +205,19 @@ Existem dois conjuntos de filtros:
 - **Qualidade do ar** — barra lateral (`views/barra_lateral.py`). O `app.py` só a desenha nas páginas que usam
   esses filtros (função `_precisa_filtros_ar`) e guarda as escolhas ao trocar de página (`_manter_filtros_ar`).
 - **Termômetros** — no topo da própria página (`views/filtros_termometros.py`), numerados 1, 2, 3. O parâmetro
-  `persist_state="session"` faz o Streamlit lembrar a escolha ao trocar de página.
+  `persist_state="session"` faz o Streamlit lembrar a escolha ao trocar de página (exige Streamlit 1.59+; o
+  painel todo exige 1.67+ por causa do `st.Page(help=...)` no `app.py` — veja `requirements.txt`).
+
+**Período dos termômetros — cuidado com data × data e hora.** O filtro devolve dois tipos de período:
+
+| Opção | O que o filtro manda | Como o recorte (`DadosTermometros.recorte`) entende |
+|---|---|---|
+| Quando todos mediram juntos | `datetime` (data **e hora**) | Exatamente daquele instante até aquele instante |
+| Todo o período / Escolher datas | `date` (só a data) | Dias inteiros, de 00h00 do início a 23h59 do fim |
+
+Não troque o período em comum por só a data (`.date()`): o recorte voltaria a pegar o dia inteiro e um termômetro
+ficaria com horas que os outros não têm (era o erro corrigido após a auditoria; os testes
+`test_periodo_comum_*` e `test_dados_reais_periodo_comum_tem_as_mesmas_horas_para_todos` acusam isso).
 
 Para um filtro novo da qualidade do ar:
 

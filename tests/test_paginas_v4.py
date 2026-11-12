@@ -4,6 +4,8 @@ Usam o ``AppTest`` do Streamlit: o app roda em memória, os testes "clicam" nos
 controles e conferem o que apareceu na tela.
 """
 
+from datetime import date
+
 import pytest
 from streamlit.testing.v1 import AppTest
 
@@ -75,6 +77,29 @@ def test_termometros_sem_selecao_pede_escolha(app):
     at.pills(key="term_ids").set_value([]).run()
     _sem_erros(at)
     assert any("Escolha pelo menos um termômetro" in w.value for w in at.warning)
+    at.pills(key="term_ids").set_value(["T1", "T2", "T3", "T4", "T5"]).run()
+
+
+def test_termometros_periodo_com_hora_e_troca_de_termometros(app):
+    """Período em comum mostra data E hora; muda ao trocar os termômetros; as outras opções usam dias inteiros."""
+    at = _ir(app, "termometros")
+
+    def legenda():
+        return " ".join(c.value for c in at.caption if c.value.startswith("Período analisado"))
+
+    assert "17/02/2025 às 19h00 a 12/06/2025 às 00h10" in legenda()
+    at.pills(key="term_ids").set_value(["T1", "T5"]).run()
+    assert "11/02/2025 às 18h00 a 21/09/2025 às 23h10" in legenda()
+    at.segmented_control(key="term_modo_periodo").set_value("todo").run()
+    assert "Período analisado: 11/02/2025 a 21/09/2025." in legenda()
+    at.segmented_control(key="term_modo_periodo").set_value("escolher").run()
+    _sem_erros(at)
+    assert at.date_input(key="term_datas") is not None
+    at.date_input(key="term_datas").set_value((date(2025, 3, 1), date(2025, 3, 31))).run()
+    assert "Período analisado: 01/03/2025 a 31/03/2025." in legenda()
+    _sem_erros(at)
+    # volta ao padrão para não afetar os outros testes
+    at.segmented_control(key="term_modo_periodo").set_value("comum").run()
     at.pills(key="term_ids").set_value(["T1", "T2", "T3", "T4", "T5"]).run()
 
 

@@ -29,7 +29,11 @@ Cuidados com os dados (decisões metodológicas)
 * Termômetros NUNCA são misturados numa média única: cada um representa um
   local diferente. A comparação é sempre lado a lado.
 * Os períodos de medição não são iguais para todos os aparelhos. Para comparar
-  de forma justa, o sistema oferece o "período em comum".
+  de forma justa, o sistema oferece o "período em comum", que respeita a DATA
+  E A HORA exatas: começa na primeira leitura em que todos já estavam ligados
+  e termina na última leitura em que todos ainda estavam ligados. Assim, o
+  primeiro e o último dia podem ser dias incompletos, mas são incompletos
+  igualmente para todos (nenhum termômetro "ganha" horas a mais).
 """
 
 from __future__ import annotations
@@ -37,7 +41,7 @@ from __future__ import annotations
 import json
 import re  # expressões regulares: usadas para tirar números de textos como "32,1°C / 87,8%RH"
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 import pandas as pd
@@ -301,11 +305,20 @@ class DadosTermometros:
         sub = self.medicoes[self.medicoes[COL_ID].isin(ids)]
         return sub[COL_DATA].min().date(), sub[COL_DATA].max().date()
 
-    def periodo_comum(self, ids: list[str]) -> tuple[date, date] | None:
-        """Dias em que TODOS os termômetros escolhidos estavam medindo ao mesmo tempo.
+    def periodo_comum(self, ids: list[str]) -> tuple[datetime, datetime] | None:
+        """Momento (data E hora) em que TODOS os termômetros escolhidos estavam medindo ao mesmo tempo.
 
-        Exemplo: se o termômetro A mediu de jan a jun e o B de mar a set, o
-        período em comum é de mar a jun. Devolve ``None`` se não houver sobreposição.
+        Exemplo: se o termômetro A mediu de 11/02 18h00 a 21/09 23h10 e o B de
+        17/02 19h00 a 28/09 00h10, o período em comum vai de 17/02 19h00 a
+        21/09 23h10. Devolve ``None`` se não houver sobreposição (ou se a lista
+        estiver vazia).
+
+        Por que devolver a HORA e não só o dia: se devolvêssemos só as datas, o
+        recorte pegaria o dia inteiro de 17/02 — incluindo as horas da manhã em
+        que o B ainda não estava ligado. A comparação ficaria desequilibrada.
+
+        Lacunas no meio do período (aparelho desligado por algumas horas) NÃO
+        mudam esses limites: elas continuam vazias, sem valores inventados.
         """
         sub = self.medicoes[self.medicoes[COL_ID].isin(ids)]
         if sub.empty:
@@ -314,13 +327,34 @@ class DadosTermometros:
         inicio, fim = limites["min"].max(), limites["max"].min()  # o mais tardio dos inícios e o mais cedo dos fins
         if inicio > fim:
             return None
-        return inicio.date(), fim.date()
+        return inicio.to_pydatetime(), fim.to_pydatetime()
 
-    def recorte(self, ids: list[str], inicio: date, fim: date) -> pd.DataFrame:
-        """Medições dos termômetros escolhidos entre ``inicio`` e ``fim`` (dias inteiros, inclusive)."""
+    @staticmethod
+    def limites(inicio: date | datetime, fim: date | datetime) -> tuple[pd.Timestamp, pd.Timestamp]:
+        """Converte o período escolhido em dois instantes: início (incluso) e fim (EXCLUÍDO).
+
+        Duas formas de informar o período:
+        * só datas (``date``): vale o dia inteiro — de 00h00 do início até
+          23h59 do fim. É o que acontece em "Todo o período" e "Escolher datas";
+        * data e hora (``datetime``): vale exatamente aquele instante — é o
+          que acontece em "Quando todos mediram juntos".
+        """
+        # Atenção: datetime é um "tipo filho" de date, por isso testamos datetime primeiro.
+        if isinstance(fim, datetime):
+            fim_excluido = pd.Timestamp(fim) + pd.Timedelta(microseconds=1)  # inclui a leitura exatamente no fim
+        else:
+            fim_excluido = pd.Timestamp(fim) + pd.Timedelta(days=1)  # +1 dia para incluir o último dia inteiro
+        return pd.Timestamp(inicio), fim_excluido
+
+    def recorte(self, ids: list[str], inicio: date | datetime, fim: date | datetime) -> pd.DataFrame:
+        """Medições dos termômetros escolhidos entre ``inicio`` e ``fim`` (inclusive).
+
+        Com datas, pega os dias inteiros; com data e hora, respeita o horário
+        exato (veja ``limites``).
+        """
         m = self.medicoes
-        fim_exclusivo = pd.Timestamp(fim) + pd.Timedelta(days=1)  # +1 dia para incluir o último dia inteiro
-        filtro = m[COL_ID].isin(ids) & (m[COL_DATA] >= pd.Timestamp(inicio)) & (m[COL_DATA] < fim_exclusivo)
+        ini, fim_excluido = self.limites(inicio, fim)
+        filtro = m[COL_ID].isin(ids) & (m[COL_DATA] >= ini) & (m[COL_DATA] < fim_excluido)
         return m[filtro].reset_index(drop=True)
 
 
